@@ -65,7 +65,8 @@ Project Organization
     │   │   ├── predict_model.py
     │   │   └── train_model.py
     │   │
-    │   ├── utils  <- Scripts for helper functions, includes mlflow and s3.
+    │   ├── utils  <- Scripts for helper functions, includes mlflow and s3 
+    │   │   ├── logging_helper.py  
     │   │   ├── mlflow_helper.py
     │   │   └── s3_helper.py
     │   │
