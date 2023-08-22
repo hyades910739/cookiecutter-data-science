@@ -5,11 +5,7 @@
 click
 Sphinx
 coverage
-awscli
-flake8
+awscli==1.29.31
+boto3
+mlflow
 python-dotenv>=0.5.1
-{% if cookiecutter.python_interpreter != 'python3' %}
-
-# backwards compatibility
-pathlib2
-{% endif %}

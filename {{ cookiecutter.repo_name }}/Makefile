@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3 venv
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -16,18 +16,72 @@ else
 HAS_CONDA=True
 endif
 
+PWD := $(realpath $(dir $(abspath $(firstword $(MAKEFILE_LIST)))))
+py = $$(if [ -d $(PWD)/'venv' ]; then echo $(PWD)/"venv/bin/python3"; else echo "python3"; fi)
+pip = $(py) -m pip
+isort = $(py) -m isort . --profile=black
+black = $(py) -m black -l 120 --target-version py39 .
+
+
+
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
+
+## 
+venv: requirements.txt  ## Build the virtual environment
+	$(py) -m venv venv
+	$(pip) install -U pip setuptools wheel build
+	$(pip) install -U --upgrade pip
+	$(pip) install -U -r requirements.txt
+	touch venv
+
+.PHONY: install-requirements
+install-requirements: venv
+	$(py) -m pip install -U wheel pip	
+	$(pip) install -r requirements.txt
+	
+.PHONY: install-pkg
+install-pkg: setup.py
+	$(pip) install -e .
+
+.PHONY: install-dev 
+install-dev: venv requirements-dev.txt .pre-commit-config.yaml
+	$(pip) install -r requirements-dev.txt
+	pre-commit install
+	pre-commit install --hook-type pre-push
+
+.PHONY: install-all
+install-all: install-requirements install-dev install-pkg
+
+.PHONY: test
+test:
+	pytest --cov-report html --cov=src -m 'not longrun' tests
+
+.PHONY: format
+format:
+	$(isort)
+	$(black)
+
+.PHONY: lint
+lint:
+	flake8 src 
+	$(isort) --check-only --df
+	$(black) --check
+
+## Make Dataset
+data: install-requirements install-pkg
+	$(py) src/data/make_dataset.py data/raw data/processed
+
 
 ## Install Python Dependencies
 requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
-## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+# ## Make Dataset
+# data: requirements
+# 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
 ## Delete all compiled Python files
 clean:

@@ -1,0 +1,5 @@
+{
+    "MLFLOW_TRACKING_URI": "{{ cookiecutter.mlflow_tracking_uri }}",
+    "MLFLOW_TRACKING_USERNAME": "{{ cookiecutter.mlflow_tracking_username }}",
+    "MLFLOW_TRACKING_PASSWORD": "{{ cookiecutter.mlflow_tracking_password }}"
+}

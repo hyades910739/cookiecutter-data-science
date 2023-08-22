@@ -3,6 +3,25 @@
 
 {{cookiecutter.description}}
 
+Setup Project Environments
+------------
+1. create git repo (`git init`)
+2. run `make install-dev`, it will:
+    a. create a virtual environment 
+    b. install requirements.txt
+    c. install requirements-dev.txt
+    d. install pre-commit hooks
+
+Useful Commands:
+------------
+* `make format`: run formatter (isort and black)
+* `make lint`: run flake8
+* `make test`: run pytest
+* `make data`: process data (run main function in `src/data/make_dataset.py`)
+* `make install-requirements`: install requirements.txt if the requirements is changed.
+* `make sync_data_to_s3`: sync data to s3
+* `make sync_data_from_s3`: sync data from s3
+
 Project Organization
 ------------
 
@@ -46,6 +65,10 @@ Project Organization
     │   │   ├── predict_model.py
     │   │   └── train_model.py
     │   │
+    │   ├── utils  <- Scripts for helper functions, includes mlflow and s3.
+    │   │   ├── mlflow_helper.py
+    │   │   └── s3_helper.py
+    │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
     │
@@ -53,5 +76,6 @@ Project Organization
 
 
 --------
+
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>

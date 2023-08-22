@@ -1,0 +1,7 @@
+jupyter
+jupyterlab
+black
+isort
+pre-commit
+pytest
+flake8
